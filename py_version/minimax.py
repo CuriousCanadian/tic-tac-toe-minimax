@@ -14,8 +14,7 @@ Year: 2017
 License: GNU GENERAL PUBLIC LICENSE (GPL)
 
 Example:
-Paul Lu
-CCID:  paullu
+CCID:  
 """
 
 HUMAN = -1
