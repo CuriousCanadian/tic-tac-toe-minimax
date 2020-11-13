@@ -80,7 +80,7 @@ class tictactoe:
             self.human_turn()
             self.ai_turn()
 
-        self.boardstate.end()
+        self.end()
 
     def human_turn(self):
         """
@@ -138,13 +138,29 @@ class tictactoe:
         else:
             board = self.boardstate
             move = board.minimax(depth, self.boardstate.COMP)
-            #move = self.boardstate.minimax(board, depth, self.boardstate.COMP)
             x, y = move[0], move[1]
 
         self.boardstate.set_move(x, y, self.boardstate.COMP)
         # Paul Lu.  Go full speed.
         # time.sleep(1)
 
+    def end(self):
+        # Game over message
+        if self.boardstate.wins(self.boardstate.board, self.boardstate.HUMAN):
+            clean()
+            print(f'Human turn [{self.h_choice}]')
+            self.render(self.boardstate.board)
+            print('YOU WIN!')
+        elif self.boardstate.wins(self.boardstate.board, self.boardstate.COMP):
+            clean()
+            print(f'Computer turn [{self.c_choice}]')
+            self.render(self.boardstate.board)
+            print('YOU LOSE!')
+        else:
+            clean()
+            self.render(self.boardstate. board)
+            print('DRAW!')
+        return
 
     def render(self, bstate):
         """
@@ -276,24 +292,6 @@ class state:
                     cells.append([x, y])
 
         return cells
-
-    def end(self):
-        # Game over message
-        if self.wins(self.board, self.HUMAN):
-            clean()
-            print(f'Human turn [{h_choice}]')
-            render(board, c_choice, h_choice)
-            print('YOU WIN!')
-        elif wins(board, COMP):
-            clean()
-            print(f'Computer turn [{c_choice}]')
-            render(board, c_choice, h_choice)
-            print('YOU LOSE!')
-        else:
-            clean()
-            render(board, c_choice, h_choice)
-            print('DRAW!')
-        return
 
     def game_over(self, bstate):
         """
