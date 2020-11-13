@@ -74,17 +74,17 @@ class tictactoe:
         # Main loop of this game
         while len(self.boardstate.empty_cells()) > 0 and not self.boardstate.game_over(self.boardstate.board):
             if self.first == 'N':
-                ai_turn(c_choice, h_choice)
+                self.ai_turn()
                 self.first = ''
 
             self.human_turn()
             self.ai_turn()
 
+        self.boardstate.end()
+
     def human_turn(self):
         """
         The Human plays choosing a valid move.
-        :param c_choice: computer's choice X or O
-        :param h_choice: human's choice X or O
         :return:
         """
         depth = len(self.boardstate.empty_cells())
@@ -122,8 +122,6 @@ class tictactoe:
         """
         It calls the minimax function if the depth < 9,
         else it choices a random coordinate.
-        :param c_choice: computer's choice X or O
-        :param h_choice: human's choice X or O
         :return:
         """
         depth = len(self.boardstate.empty_cells())
@@ -138,35 +136,20 @@ class tictactoe:
             x = choice([0, 1, 2])
             y = choice([0, 1, 2])
         else:
-            move = self.boardstate.minimax(board, depth, COMP)
+            board = self.boardstate
+            move = board.minimax(depth, self.boardstate.COMP)
+            #move = self.boardstate.minimax(board, depth, self.boardstate.COMP)
             x, y = move[0], move[1]
 
-        set_move(x, y, COMP)
+        self.boardstate.set_move(x, y, self.boardstate.COMP)
         # Paul Lu.  Go full speed.
         # time.sleep(1)
 
-    def end(self):
-        # Game over message
-        if wins(board, HUMAN):
-            clean()
-            print(f'Human turn [{h_choice}]')
-            render(board, c_choice, h_choice)
-            print('YOU WIN!')
-        elif wins(board, COMP):
-            clean()
-            print(f'Computer turn [{c_choice}]')
-            render(board, c_choice, h_choice)
-            print('YOU LOSE!')
-        else:
-            clean()
-            render(board, c_choice, h_choice)
-            print('DRAW!')
-        return
 
     def render(self, bstate):
         """
         Print the board on console
-        :param state: current state of the board
+        :param bstate: current state of the board
         """
 
         chars = {
@@ -204,6 +187,55 @@ class state:
     def __repr__(self):
         s = "<%d> %s" % (id(self), self.type)
         return (s)
+
+    def minimax(self, depth, player):
+        """
+        AI function that choice the best move
+        :param state: current state of the board
+        :param depth: node index in the tree (0 <= depth <= 9),
+        but never nine in this case (see iaturn() function)
+        :param player: an human or a computer
+        :return: a list with [the best row, best col, best score]
+        """
+        if player == self.COMP:
+            best = [-1, -1, -infinity]
+        else:
+            best = [-1, -1, +infinity]
+
+        if depth == 0 or self.game_over(self.board):
+            score = self.evaluate(self.board)
+            return [-1, -1, score]
+
+        for cell in self.empty_cells():
+            x, y = cell[0], cell[1]
+            self.board[x][y] = player
+            score = self.minimax(depth - 1, -player)
+            self.board[x][y] = 0
+            score[0], score[1] = x, y
+
+            if player == self.COMP:
+                if score[2] > best[2]:
+                    best = score  # max value
+            else:
+                if score[2] < best[2]:
+                    best = score  # min value
+
+        return best
+
+    def evaluate(self, bstate):
+        """
+        Function to heuristic evaluation of state.
+        :param state: the state of the current board
+        :return: +1 if the computer wins; -1 if the human wins; 0 draw
+        """
+        if self.wins(bstate, self.COMP):
+            score = +1
+        elif self.wins(bstate, self.HUMAN):
+            score = -1
+        else:
+            score = 0
+
+        return score
 
     def set_move(self, x, y, player):
         """
@@ -244,6 +276,24 @@ class state:
                     cells.append([x, y])
 
         return cells
+
+    def end(self):
+        # Game over message
+        if self.wins(self.board, self.HUMAN):
+            clean()
+            print(f'Human turn [{h_choice}]')
+            render(board, c_choice, h_choice)
+            print('YOU WIN!')
+        elif wins(board, COMP):
+            clean()
+            print(f'Computer turn [{c_choice}]')
+            render(board, c_choice, h_choice)
+            print('YOU LOSE!')
+        else:
+            clean()
+            render(board, c_choice, h_choice)
+            print('DRAW!')
+        return
 
     def game_over(self, bstate):
         """
@@ -286,7 +336,6 @@ def main():
     game1=tictactoe()
     game1.start()
     game1.play()
-    game1.end()
 
     exit()
 
