@@ -23,6 +23,9 @@ def clean():
 
 class tictactoe:
     def __init__(self):
+        """
+        Initializes the attributes used by methods
+        """
         self.type = str(self.__class__)
         self.h_choice = ''  # X or O
         self.c_choice = ''  # X or O
@@ -30,13 +33,23 @@ class tictactoe:
         self.boardstate = state()
 
     def __str__(self):
+        """
+        Returns the string representation of this object type.
+        """
         return self.type
 
     def __repr__(self):
+        """
+        Returns this object representation.
+        """
         s = "<%d> %s" % (id(self), self.type)
         return s
 
     def start(self):
+        """
+        Start sequence for the game, asks user a couple questions.
+        """
+
         # Paul Lu.  Set the seed to get deterministic behaviour for each run.
         #       Makes it easier for testing and tracing for understanding.
         randomseed(274 + 2020)
@@ -59,7 +72,7 @@ class tictactoe:
         else:
             self.c_choice = 'X'
 
-        # Human may starts first
+        # Human chooses who starts the game
         clean()
         while self.first != 'Y' and self.first != 'N':
             try:
@@ -72,9 +85,16 @@ class tictactoe:
         return
 
     def play(self):
+        """
+        The main game loop, also initiates the start & end sequence
+        """
+
+        # begin the start sequence
+        self.start()
+
         # Main loop of this game
         while len(self.boardstate.empty_cells()) > 0 and \
-                    not self.boardstate.game_over(self.boardstate.board):
+                not self.boardstate.game_over(self.boardstate.board):
             if self.first == 'N':
                 self.ai_turn()
                 self.first = ''
@@ -82,13 +102,15 @@ class tictactoe:
             self.human_turn()
             self.ai_turn()
 
+        # game is over, begin end sequence
         self.end()
 
     def human_turn(self):
         """
         The Human plays choosing a valid move.
-        :return:
         """
+
+        # check that the game should continue
         depth = len(self.boardstate.empty_cells())
         if depth == 0 or self.boardstate.game_over(self.boardstate.board):
             return
@@ -101,10 +123,12 @@ class tictactoe:
             7: [2, 0], 8: [2, 1], 9: [2, 2],
         }
 
+        # print current board
         clean()
         print(f'Human turn [{self.h_choice}]')
         self.render(self.boardstate.board)
 
+        # get input for where user wants to place their turn
         while move < 1 or move > 9:
             try:
                 move = int(input('Use numpad (1..9): '))
@@ -124,16 +148,19 @@ class tictactoe:
         """
         It calls the minimax function if the depth < 9,
         else it choices a random coordinate.
-        :return:
         """
+
+        # check if the game should continue
         depth = len(self.boardstate.empty_cells())
         if depth == 0 or self.boardstate.game_over(self.boardstate.board):
             return
 
+        # print the current board
         clean()
         print(f'Computer turn [{self.c_choice}]')
         self.render(self.boardstate.board)
 
+        # use minimax to find optimal move
         if depth == 9:
             x = choice([0, 1, 2])
             y = choice([0, 1, 2])
@@ -142,12 +169,16 @@ class tictactoe:
             move = board.minimax(depth, self.boardstate.COMP)
             x, y = move[0], move[1]
 
+        # set the move
         self.boardstate.set_move(x, y, self.boardstate.COMP)
         # Paul Lu.  Go full speed.
         # time.sleep(1)
 
     def end(self):
-        # Game over message
+        """
+        The end sequence, prints the appropriate game over message
+        """
+
         if self.boardstate.wins(self.boardstate.board, self.boardstate.HUMAN):
             clean()
             print(f'Human turn [{self.h_choice}]')
@@ -160,7 +191,7 @@ class tictactoe:
             print('YOU LOSE!')
         else:
             clean()
-            self.render(self.boardstate. board)
+            self.render(self.boardstate.board)
             print('DRAW!')
         return
 
@@ -189,6 +220,9 @@ class tictactoe:
 
 class state:
     def __init__(self):
+        """
+        Initializes the attributes used by methods
+        """
         self.type = str(self.__class__)
         self.board = [
             [0, 0, 0],
@@ -200,9 +234,15 @@ class state:
         return
 
     def __str__(self):
+        """
+        Returns the string representation of this object type.
+        """
         return self.type
 
     def __repr__(self):
+        """
+        Returns this object representation.
+        """
         s = "<%d> %s" % (id(self), self.type)
         return s
 
@@ -242,7 +282,7 @@ class state:
     def evaluate(self, bstate):
         """
         Function to heuristic evaluation of state.
-        :param state: the state of the current board
+        :param bstate: the state of the current board
         :return: +1 if the computer wins; -1 if the human wins; 0 draw
         """
         if self.wins(bstate, self.COMP):
@@ -329,10 +369,9 @@ class state:
 
 def main():
     """
-    Main function that calls all functions
+    Main function that instantiates the object and calls its main method
     """
     game1 = tictactoe()
-    game1.start()
     game1.play()
     exit()
 
