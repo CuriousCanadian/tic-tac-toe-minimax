@@ -5,6 +5,21 @@ import platform
 import time
 from os import system
 
+"""
+An implementation of Minimax AI Algorithm in Tic Tac Toe,
+using Python.
+This software is available under GPL license.
+Author: Clederson Cruz
+Year: 2017
+License: GNU GENERAL PUBLIC LICENSE (GPL)
+
+Name: Jade Moore-Jackson
+ID: 1644431
+CMPUT 274, Fall 2020
+
+Weekly Exercise #6: Object-Oriented Minimax 
+"""
+
 
 def clean():
     """
