@@ -5,6 +5,7 @@ import platform
 import time
 from os import system
 
+
 def clean():
     """
     Clears the console
@@ -18,6 +19,7 @@ def clean():
         system('cls')
     else:
         system('clear')
+
 
 class tictactoe:
     def __init__(self):
@@ -67,12 +69,12 @@ class tictactoe:
                 exit()
             except (KeyError, ValueError):
                 print('Bad choice')
-
         return
 
     def play(self):
         # Main loop of this game
-        while len(self.boardstate.empty_cells()) > 0 and not self.boardstate.game_over(self.boardstate.board):
+        while len(self.boardstate.empty_cells()) > 0 and \
+                    not self.boardstate.game_over(self.boardstate.board):
             if self.first == 'N':
                 self.ai_turn()
                 self.first = ''
@@ -107,8 +109,8 @@ class tictactoe:
             try:
                 move = int(input('Use numpad (1..9): '))
                 coord = moves[move]
-                can_move = self.boardstate.set_move(coord[0], coord[1], self.boardstate.HUMAN)
-
+                can_move = self.boardstate.set_move(coord[0], coord[1],
+                                                    self.boardstate.HUMAN)
                 if not can_move:
                     print('Bad move')
                     move = -1
@@ -198,16 +200,15 @@ class state:
         return
 
     def __str__(self):
-        return (self.type)
+        return self.type
 
     def __repr__(self):
         s = "<%d> %s" % (id(self), self.type)
-        return (s)
+        return s
 
     def minimax(self, depth, player):
         """
         AI function that choice the best move
-        :param state: current state of the board
         :param depth: node index in the tree (0 <= depth <= 9),
         but never nine in this case (see iaturn() function)
         :param player: an human or a computer
@@ -281,7 +282,6 @@ class state:
     def empty_cells(self):
         """
         Each empty cell will be added into cells' list
-        :param state: the state of the current board
         :return: a list of empty cells
         """
         cells = []
@@ -296,7 +296,7 @@ class state:
     def game_over(self, bstate):
         """
         This function test if the human or computer wins
-        :param state: the state of the current board
+        :param bstate: the state of the current board
         :return: True if the human or computer wins
         """
         return self.wins(bstate, self.HUMAN) or self.wins(bstate, self.COMP)
@@ -331,10 +331,9 @@ def main():
     """
     Main function that calls all functions
     """
-    game1=tictactoe()
+    game1 = tictactoe()
     game1.start()
     game1.play()
-
     exit()
 
 
