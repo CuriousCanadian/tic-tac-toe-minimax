@@ -13,8 +13,11 @@ Author: Clederson Cruz
 Year: 2017
 License: GNU GENERAL PUBLIC LICENSE (GPL)
 
-Example:
-CCID:  
+Name: Jade Moore-Jackson
+ID: 1644431
+CMPUT 274, Fall 2020
+
+Weekly Exercise #6: Object-Oriented Minimax 
 """
 
 HUMAN = -1
